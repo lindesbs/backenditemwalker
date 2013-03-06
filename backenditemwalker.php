@@ -41,8 +41,7 @@ class backenditemwalker extends BackendModule
 		$strTable =  $this->Input->get("table");
 		$intId =  $this->Input->get("id");
 		$myAct =  $this->Input->get("act");
-
-		if (($strTable) && ($myAct=='edit') && ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == 'Table'))
+		if (($strTemplate=='be_main') && ($strTable) && ($myAct=='edit') && ($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'] == 'Table'))
 		{
 		// ItemSiwtcher next/previous
 			$itemSwitcher ='';
@@ -110,13 +109,16 @@ class backenditemwalker extends BackendModule
 				
 				$itemSwitcher .='<a href="'.$strUrl.'" class="header_nextitem" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['nextitem']).'" onclick="Backend.getScrollOffset();" accesskey="d">'.specialchars($GLOBALS['TL_LANG']['MSC']['nextitem']).'</a>';
 			}
+            
+            
+            $regEx = '#<div[ ]id="tl_buttons">(.*)#ix';
+    
+            $this->strBackendButtons = $itemSwitcher;
+            $strContent = preg_replace_callback($regEx, array($this,"decodeRTContent"), $strContent);
+                
 		}
 
-		$regEx = '!<div[ ]id="tl_buttons">(.*)!ix';
-
-		$this->strBackendButtons = $itemSwitcher;
-		$strContent = preg_replace_callback($regEx, array ($this,"decodeRTContent"), $strContent);
-
+		
 		return $strContent;
 	}
 
